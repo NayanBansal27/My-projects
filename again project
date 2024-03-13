@@ -1,3 +1,6 @@
+import time
+import math
+import random
 print("SUPERMARKET MANAGEMENT SYSTEM")
 
 class Product:
