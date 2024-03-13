@@ -1,0 +1,110 @@
+print("SUPERMARKET MANAGEMENT SYSTEM")
+
+class Product:
+    def __init__(self, name, price, quantity):
+        self.name = name
+        self.price = price
+        self.quantity = quantity
+
+    def add_quantity(self, quantity):
+        self.quantity += quantity
+
+    def reduce_quantity(self, quantity):
+        if self.quantity >= quantity:
+            self.quantity -= quantity
+        else:
+            print("Error: Not enough quantity available.")
+
+    def calculate_total(self):
+        return self.price * self.quantity
+
+class Customer:
+    def __init__(self, name):
+        self.name = name
+        self.cart = []
+
+    def add_to_cart(self, product):
+        self.cart.append(product)
+
+    def remove_from_cart(self, product):
+        self.cart.remove(product)
+
+    def calculate_total(self):
+        total = 0
+        for product in self.cart:
+            total += product.calculate_total()
+        return total
+
+class Supermarket:
+    def __init__(self):
+        self.products = []
+        self.customers = []
+
+    def add_product(self, product):
+        self.products.append(product)
+
+    def remove_product(self, product):
+        self.products.remove(product)
+
+    def add_customer(self, customer):
+        self.customers.append(customer)
+
+    def remove_customer(self, customer):
+        self.customers.remove(customer)
+
+    def display_products(self):
+        for product in self.products:
+            print(f"{product.name} - Price: {product.price} - Quantity: {product.quantity}")
+
+    def display_customers(self):
+        for customer in self.customers:
+            print(f"{customer.name} - Total: {customer.calculate_total()}")
+
+def main():
+    supermarket = Supermarket()
+    while True:
+        print("\n1. Add Customer")
+        print("2. Display Customer")
+        print("3. Remove Customer")
+        print("4. Add Product")
+        print("5. Display Products")
+        print("6. Remove Product")
+        print("7. Exit")
+        choice = int(input("Enter your choice: "))
+        if choice == 1:
+            name = input("Enter customer name: ")
+            customer = Customer(name)
+            supermarket.add_customer(customer)
+        elif choice == 2:
+            supermarket.display_customers()
+        elif choice == 3:
+            name = input("Enter customer name to remove: ")
+            for customer in supermarket.customers:
+                if customer.name == name:
+                    supermarket.remove_customer(customer)
+                    break
+            else:
+                print("Error: Customer not found.")
+        elif choice == 4:
+            name = input("Enter product name: ")
+            price = float(input("Enter product price: "))
+            quantity = int(input("Enter product quantity: "))
+            product = Product(name, price, quantity)
+            supermarket.add_product(product)
+        elif choice == 5:
+            supermarket.display_products()
+        elif choice == 6:
+            name = input("Enter product name to remove: ")
+            for product in supermarket.products:
+                if product.name == name:
+                    supermarket.remove_product(product)
+                    break
+            else:
+                print("Error: Product not found.")
+        elif choice == 7:
+            break
+        else:
+            print("Error: Invalid choice.")
+
+if __name__ == "__main__":
+    main()
