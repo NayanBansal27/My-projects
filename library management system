@@ -1,113 +1,87 @@
-import time
-import math
-import random
-print("SUPERMARKET MANAGEMENT SYSTEM")
+class Book:
+    def __init__(self, title, author):
+        self.title = title
+        self.author = author
+        self.checked_out = False
 
-class Product:
-    def __init__(self, name, price, quantity):
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-
-    def add_quantity(self, quantity):
-        self.quantity += quantity
-
-    def reduce_quantity(self, quantity):
-        if self.quantity >= quantity:
-            self.quantity -= quantity
-        else:
-            print("Error: Not enough quantity available.")
-
-    def calculate_total(self):
-        return self.price * self.quantity
-
-class Customer:
-    def __init__(self, name):
-        self.name = name
-        self.cart = []
-
-    def add_to_cart(self, product):
-        self.cart.append(product)
-
-    def remove_from_cart(self, product):
-        self.cart.remove(product)
-
-    def calculate_total(self):
-        total = 0
-        for product in self.cart:
-            total += product.calculate_total()
-        return total
-
-class Supermarket:
+class Library:
     def __init__(self):
-        self.products = []
-        self.customers = []
+        self.books = []
 
-    def add_product(self, product):
-        self.products.append(product)
+    def add_book(self, title, author):
+        new_book = Book(title, author)
+        self.books.append(new_book)
+    
+    def remove_book(self, title):
+        self.books = [book for book in self.books if book.title.lower() != title.lower()]
 
-    def remove_product(self, product):
-        self.products.remove(product)
+    def checkout_book(self, title):
+        book = next((book for book in self.books if book.title.lower() == title.lower()), None)
+        if book is None:
+            print("Book not found.")
+            return
+        if book.checked_out:
+            print("Book already checked out.")
+            return
+        book.checked_out = True
+        print("Book checked out successfully.")
 
-    def add_customer(self, customer):
-        self.customers.append(customer)
+    def return_book(self, title):
+        book = next((book for book in self.books if book.title.lower() == title.lower()), None)
+        if book is None:
+            print("Book not found.")
+            return
+        if not book.checked_out:
+            print("Book not checked out.")
+            return
+        book.checked_out = False
+        print("Book returned successfully.")
 
-    def remove_customer(self, customer):
-        self.customers.remove(customer)
-
-    def display_products(self):
-        for product in self.products:
-            print(f"{product.name} - Price: {product.price} - Quantity: {product.quantity}")
-
-    def display_customers(self):
-        for customer in self.customers:
-            print(f"{customer.name} - Total: {customer.calculate_total()}")
+    def list_books(self):
+        print("\nList of Books:")
+        for index, book in enumerate(self.books, start=1):
+            print(f"{index}. {book.title}")
 
 def main():
-    supermarket = Supermarket()
+    lib = Library()
+
+    # Adding sample books
+    lib.add_book("The Catcher in the Rye", "J.D. Salinger")
+    lib.add_book("To Kill a Mockingbird", "Harper Lee")
+
+    # Display the list of books
+    lib.list_books()
+
     while True:
-        print("\n1. Add Customer")
-        print("2. Display Customer")
-        print("3. Remove Customer")
-        print("4. Add Product")
-        print("5. Display Products")
-        print("6. Remove Product")
-        print("7. Exit")
-        choice = int(input("Enter your choice: "))
+        print("\nBook Management System")
+        print("1. Add a book")
+        print("2. Remove a book")
+        print("3. Check out a book")
+        print("4. Return a book")
+        print("5. Exit")
+
+        choice = int(input("Enter your choice (1-5): "))
+
         if choice == 1:
-            name = input("Enter customer name: ")
-            customer = Customer(name)
-            supermarket.add_customer(customer)
+            title = input("Enter the title of the book: ")
+            author = input("Enter the author of the book: ")
+            lib.add_book(title, author)
+            print("Book added successfully.")
         elif choice == 2:
-            supermarket.display_customers()
+            title = input("Enter the title of the book: ")
+            lib.remove_book(title)
+            print("Book removed successfully.")
         elif choice == 3:
-            name = input("Enter customer name to remove: ")
-            for customer in supermarket.customers:
-                if customer.name == name:
-                    supermarket.remove_customer(customer)
-                    break
-            else:
-                print("Error: Customer not found.")
+            title = input("Enter the title of the book: ")
+            lib.checkout_book(title)
         elif choice == 4:
-            name = input("Enter product name: ")
-            price = float(input("Enter product price: "))
-            quantity = int(input("Enter product quantity: "))
-            product = Product(name, price, quantity)
-            supermarket.add_product(product)
+            title = input("Enter the title of the book: ")
+            lib.return_book(title)
         elif choice == 5:
-            supermarket.display_products()
-        elif choice == 6:
-            name = input("Enter product name to remove: ")
-            for product in supermarket.products:
-                if product.name == name:
-                    supermarket.remove_product(product)
-                    break
-            else:
-                print("Error: Product not found.")
-        elif choice == 7:
+            print("Goodbye!")
             break
         else:
-            print("Error: Invalid choice.")
+            print("Invalid choice. Please enter a number between 1 and 5.")
 
 if __name__ == "__main__":
     main()
